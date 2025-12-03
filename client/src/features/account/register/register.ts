@@ -21,7 +21,6 @@ export class Register {
       next: response => {
         console.log(response);
         this.cancel();
-        //this.accountService.setCurrentUser(response)
       },
       error: error => console.log(error)
     });
