@@ -18,6 +18,9 @@
         },
        "@schematics/angular:guard": {
           "path": "src/core/guards"
+        },
+          "@schematics/angular:interceptor": {
+          "path": "src/core/interceptors"
         }
       },
       "root": "",

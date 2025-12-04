@@ -27,7 +27,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 var app = builder.Build();
-
+app.UseMiddleware<API.Middleware.ExceptionMiddleware>();
 app.UseHttpsRedirection();
 
 app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod()
