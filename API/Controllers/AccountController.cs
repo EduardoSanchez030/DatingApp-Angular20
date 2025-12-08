@@ -9,7 +9,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers;
 
-public class AccountController(AppDbContext context, ITokenService tokenService) : BaseApiController
+public class AccountController(
+    AppDbContext context, 
+    ITokenService tokenService) : BaseApiController
 {
 
     [HttpPost("register")]
@@ -31,7 +33,7 @@ public class AccountController(AppDbContext context, ITokenService tokenService)
         return user.ToDto(tokenService);
     }
 
-     [HttpPost("login")]
+    [HttpPost("login")]
     public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
     {
         var user = await context.Users
