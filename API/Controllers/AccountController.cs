@@ -1,5 +1,6 @@
 using System.Security.Cryptography;
 using API.DTOs;
+using API.Entities;
 using API.Extensions;
 using API.Interfaces;
 using DatingApp.API.Data;
@@ -25,7 +26,15 @@ public class AccountController(
             Email = registerDto.Email,
             DisplayName = registerDto.DisplayName,
             PasswordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(registerDto.Password)),
-            PasswordSalt = hmac.Key
+            PasswordSalt = hmac.Key,
+            Member = new Member()
+            {
+                DisplayName = registerDto. DisplayName,
+                Gender = registerDto.Gender,
+                City = registerDto.City,
+                Country = registerDto.Country,
+                DateOfBirth = registerDto.DateOfBirth
+            }
         };
 
         context.Users.Add(user);
