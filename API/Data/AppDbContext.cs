@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using DatingApp.API.Entities;
 using API.Entities;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DatingApp.API.Data
 {
@@ -13,8 +14,21 @@ namespace DatingApp.API.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            
-            // Add your entity configurations here
+            var dateTimeConverter = new ValueConverter<DateTime, DateTime>(
+                v => v.ToUniversalTime(),
+                v => DateTime.SpecifyKind(v, DateTimeKind.Utc)
+            );
+
+            foreach(var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                foreach(var property in entityType.GetProperties())
+                {
+                    if (property.ClrType == typeof(DateTime))
+                    {
+                        property.SetValueConverter(dateTimeConverter);
+                    }
+                }
+            }
         }
     }
 }

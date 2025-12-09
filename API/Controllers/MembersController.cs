@@ -1,6 +1,7 @@
 using API.DTOs;
 using API.Entities;
 using API.Extensions;
+using API.Helpers;
 using API.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,9 +13,17 @@ public class MembersController(
     IPhotoService photoService) : BaseApiController
 {
     [HttpGet]
-    public async Task<ActionResult<IReadOnlyList<Member>>> GetMembers()
+    public async Task<ActionResult<IReadOnlyList<Member>>> GetMembers([FromQuery]MemberParams memberParams)
     {
-        return Ok(await memberRepository.GetMembersAync());
+        var memberId = User.GetMemberId();
+        if (memberId == null)
+        {
+            return BadRequest("No Id found in token");
+        }
+
+        memberParams.CurrentMemberid = memberId;
+
+        return Ok(await memberRepository.GetMembersAync(memberParams));
     }
 
     [Authorize]
