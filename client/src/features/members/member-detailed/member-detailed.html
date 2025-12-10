@@ -28,8 +28,8 @@
             <button class="btn btn-primary flex-1">Like user</button>
         </div>
     </div>
-    <div class="card bg-base-100 w-3/4 p-6">
-       <div class="flex justify-between items-denter">
+    <div class="card bg-base-100 w-3/4 p-6 flex-col h-[85hv]">
+       <div class="flex justify-between items-center">
          <div class="flex justify-between items-center">
             <h3 class="card-title text-3xl text-primary"> {{title()}}</h3>
          </div>          
@@ -42,7 +42,7 @@
           }
        </div>
        <div class="divider"></div>
-       <div>
+       <div class="h-full">
         <router-outlet></router-outlet>
        </div>
     </div>

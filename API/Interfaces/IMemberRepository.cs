@@ -10,5 +10,5 @@ public interface IMemberRepository
     Task<PaginatedResult<Member>> GetMembersAync(MemberParams pagingParams);
     Task<Member?> GetMemberByIdAsync(string id);
     Task<IReadOnlyList<Photo>> GetPhotosForMemberAsync(string memberId);
-     Task<Member?> GetMemberForUpdateAsync(string id);
+    Task<Member?> GetMemberForUpdateAsync(string id);
 }
