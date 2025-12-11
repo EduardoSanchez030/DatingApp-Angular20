@@ -16,7 +16,7 @@ export class MemberMessages implements OnInit {
   @ViewChild('messageEndRef') messageEndRef!: ElementRef;
   private messageService = inject(MessageService);
   private memberService = inject(MemberService);
-  protected messages = signal<Message[] | null>(null);
+  protected messages = signal<Message[] | null>([]);
   protected messageContent = '';
 
   constructor() {

@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
   selector: 'app-register',
   imports: [ReactiveFormsModule, TextInput],
   templateUrl: './register.html',
-  styleUrl: './register.css',
+  styleUrl: './register.css'
 })
 export class Register {
   //membersFromHome = input.required<User []>()
@@ -23,22 +23,23 @@ export class Register {
   protected currentStep = signal(1);
   protected validationErrors = signal<string[]>([]);
 
-  constructor () {
+  constructor() {
     this.credentialsForm = this.fb.group({
-          email: ['', [Validators.required, Validators.email]],
-          displayName: ['', Validators.required],
-          password: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(8)]],
-          confirmPassword: ['', [Validators.required, this.matchValues('password')]],
-        });
-        this.credentialsForm.controls['password'].valueChanges.subscribe(() => {
-          this.credentialsForm.controls['confirmPassword'].updateValueAndValidity();
-        });
-    
+      email: ['', [Validators.required, Validators.email]],
+      displayName: ['', Validators.required],
+      password: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(8)]],
+      confirmPassword: ['', [Validators.required, this.matchValues('password')]],
+    });
+
     this.profileForm = this.fb.group({
       gender: ['male', Validators.required],
       dateOfBirth: ['', Validators.required],
       city: ['', Validators.required],
       country: ['', Validators.required]
+    });
+
+    this.credentialsForm.controls['password'].valueChanges.subscribe(() => {
+      this.credentialsForm.controls['confirmPassword'].updateValueAndValidity();
     });
   }
 
@@ -52,16 +53,14 @@ export class Register {
     }
   }
 
-  nextStep () {
+  nextStep() {
     if (this.credentialsForm.valid) {
-        this.currentStep.update(step => step + 1);
+      this.currentStep.update(step => step + 1);
     }
   }
 
-  prevStep () {
-    if (this.credentialsForm.valid) {
-        this.currentStep.update(step => step - 1);
-    }
+  prevStep() {
+    this.currentStep.update(prevStep => prevStep - 1);
   }
 
   getMaxDate() {
@@ -71,19 +70,19 @@ export class Register {
   }
 
   register() {
-     if (this.profileForm.valid && this.credentialsForm.valid) {
-      const formData = {...this.credentialsForm.value, ...this.profileForm.value};
+    if (this.profileForm.valid && this.credentialsForm.valid) {
+      const formData = { ...this.credentialsForm.value, ...this.profileForm.value };
 
       this.accountService.register(formData).subscribe({
-          next: () => {
-            this.router.navigateByUrl('/members');
-          },
-          error: error => {
-            console.log(error)
-            this.validationErrors.set(error)
-          }
-        }); 
-      }
+        next: () => {
+          this.router.navigateByUrl('/members');
+        },
+        error: error => {
+          console.log(error);
+          this.validationErrors.set(error)
+        }
+      });
+    }
   }
 
   cancel() {

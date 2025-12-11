@@ -8,27 +8,27 @@ const cache = new Map<string, HttpEvent<unknown>>();
 export const loadingInterceptor: HttpInterceptorFn = (req, next) => {
   const busyService = inject(BusyService);
 
-  const generateCachekey = (url: string, params: HttpParams) : string => {
-     const paramString = params.keys().map(key => `${key}=${params.get(key)}`).join('&');
-      return paramString ? `${url}?${paramString}` : url;
+  const generateCacheKey = (url: string, params: HttpParams): string => {
+    const paramString = params.keys().map(key => `${key}=${params.get(key)}`).join('&');
+    return paramString ? `${url}?${paramString}` : url;
   }
 
   const invalidateCache = (urlPattern: string) => {
     for (const key of cache.keys()) {
       if (key.includes(urlPattern)) {
-          cache.delete(key)
-          console.log(`Cache invalidated for: ${key}`);
+        cache.delete(key)
+        console.log(`Cache invalidated for: ${key}`);
       }
     }
   }
 
-  const cacheKey = generateCachekey(req.url, req.params)
-  
-  if(req.method.includes('POST') && req.url.includes('/likes')) {
+  const cacheKey = generateCacheKey(req.url, req.params);
+
+  if (req.method.includes('POST') && req.url.includes('/likes')) {
     invalidateCache('/likes');
   }
 
-  if(req.method.includes('POST') && req.url.includes('/messages')) {
+  if (req.method.includes('POST') && req.url.includes('/messages')) {
     invalidateCache('/messages');
   }
 
@@ -38,7 +38,7 @@ export const loadingInterceptor: HttpInterceptorFn = (req, next) => {
       return of(cachedResponse);
     }
   }
-  
+
   busyService.busy();
 
   return next(req).pipe(
@@ -47,7 +47,7 @@ export const loadingInterceptor: HttpInterceptorFn = (req, next) => {
       cache.set(cacheKey, response)
     }),
     finalize(() => {
-         busyService.idle();
+      busyService.idle();
     })
-   );
+  );
 };

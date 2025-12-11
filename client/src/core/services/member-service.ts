@@ -16,6 +16,7 @@ export class MemberService {
 
   getMembers(memberParams: MemberParams) {   
     let params = new HttpParams();
+    
     params = params.append('pageNumber', memberParams.pageNumber);
     params = params.append('pageSize', memberParams.pageSize);
     params = params.append('minAge', memberParams.minAge);
@@ -33,23 +34,23 @@ export class MemberService {
   getMember(id: string) {
     return this.http.get<Member>(this.baseUrl + 'members/' + id).pipe(
       tap(member => {
-        this.member.set(member);
+        this.member.set(member)
       })
     )
   }
 
   getMemberPhotos(id: string) {
-    return this.http.get<Photo[]>(this.baseUrl + 'members/' + id + '/photos')
+    return this.http.get<Photo[]>(this.baseUrl + 'members/' + id + '/photos');
   }
 
   updateMember(member: EditableMember) {
-    return this.http.put(this.baseUrl + 'members', member)
+    return this.http.put(this.baseUrl + 'members', member);
   }
 
   uploadPhoto(file: File) {
     const formData = new FormData();
     formData.append('file', file);
-    return this.http.post(this.baseUrl + 'members/add-photo', formData);
+    return this.http.post<Photo>(this.baseUrl + 'members/add-photo', formData);
   }
 
   setMainPhoto(photo: Photo) {
@@ -60,4 +61,3 @@ export class MemberService {
      return this.http.delete(this.baseUrl + 'members/delete-photo/' + photoId);
   }
 }
-

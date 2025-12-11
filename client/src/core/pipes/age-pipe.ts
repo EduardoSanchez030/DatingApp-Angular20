@@ -9,10 +9,11 @@ export class AgePipe implements PipeTransform {
     const today = new Date();
     const dob = new Date(value);
     let age = today.getFullYear() - dob.getFullYear();
-    let monthDiff = today.getMonth() - dob.getMonth();
-      
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate()))
+    const monthDiff = today.getMonth() - dob.getMonth();
+
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
       age--;
+    }
 
     return age;
   }

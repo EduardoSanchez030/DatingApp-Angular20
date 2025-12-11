@@ -45,7 +45,7 @@ export class Messages implements OnInit {
   setContainer(container: string) {
     this.container = container;
     this.pageNumber = 1;
-    this.loadMessages()
+    this.loadMessages();
   }
 
   onPageChange(event: { pageNumber: number, pageSize: number }) {

@@ -6,14 +6,14 @@ import { Injectable } from '@angular/core';
 export class ToastService {
 
   constructor() {
-    this.createToastCOntainer();
+    this.createToastContainer();
   }
 
-  private createToastCOntainer() {
+  private createToastContainer() {
     if (!document.getElementById('toast-container')) {
       const container = document.createElement('div');
       container.id = 'toast-container';
-      container.className = 'toast toast-bottom toast-end'
+      container.className = 'toast toast-bottom toast-end z-50'
       document.body.appendChild(container);
     }
   }

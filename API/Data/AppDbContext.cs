@@ -2,12 +2,13 @@ using Microsoft.EntityFrameworkCore;
 using DatingApp.API.Entities;
 using API.Entities;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace DatingApp.API.Data
 {
-    public class AppDbContext(DbContextOptions options) : DbContext(options)
+    public class AppDbContext(DbContextOptions options) : IdentityDbContext<AppUser>(options)
     {
-        public DbSet<AppUser> Users { get; set; }
         public DbSet<Member> Members { get; set; }
         public DbSet<Photo> Photos { get; set; }
         public DbSet<MemberLike> Likes { get; set; }
@@ -16,6 +17,13 @@ namespace DatingApp.API.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<IdentityRole>()
+            .HasData(
+                new IdentityRole { Id = "member-id",ConcurrencyStamp = null, Name = "Member", NormalizedName = "MEMBER" },
+                new IdentityRole { Id = "moderator-id",ConcurrencyStamp = null, Name = "Moderator", NormalizedName = "MODERATOR" },
+                new IdentityRole { Id = "admin-id", ConcurrencyStamp = null, Name = "Admin", NormalizedName = "ADMIN" }
+            );
 
             modelBuilder.Entity<MemberLike>()
                 .HasKey(x => new { x.SourceMemberId, x.TargetMemberId });

@@ -11,7 +11,7 @@ import { TimeAgoPipe } from '../../../core/pipes/time-ago-pipe';
   selector: 'app-member-profile',
   imports: [DatePipe, FormsModule, TimeAgoPipe],
   templateUrl: './member-profile.html',
-  styleUrl: './member-profile.css',
+  styleUrl: './member-profile.css'
 })
 export class MemberProfile implements OnInit, OnDestroy {
   @ViewChild('editForm') editForm?: NgForm;
@@ -28,7 +28,7 @@ export class MemberProfile implements OnInit, OnDestroy {
       displayName: '',
       description: '',
       city: '',
-      country: '',
+      country: ''
   };
 
   ngOnInit(): void {
@@ -57,7 +57,7 @@ export class MemberProfile implements OnInit, OnDestroy {
                this.accountService.setCurrentUser(currentUser);
           }
 
-          this.toast.success('Profile updated successfuly');
+          this.toast.success('Profile updated successfully');
           this.memberService.editMode.set(false);
           this.memberService.member.set(updatedMember as Member);
           this.editForm?.reset(updatedMember);

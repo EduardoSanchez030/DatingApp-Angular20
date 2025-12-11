@@ -2,7 +2,7 @@ import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { catchError } from 'rxjs';
 import { ToastService } from '../services/toast-service';
-import { Navigation, NavigationExtras, Router } from '@angular/router';
+import { NavigationExtras, Router } from '@angular/router';
 
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const toast = inject(ToastService);
@@ -14,16 +14,16 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         switch (error.status) {
           case 400:
             if (error.error.errors) {
-              const modalStateErrors = [];
+              const modelStateErrors = [];
               for (const key in error.error.errors) {
                 if (error.error.errors[key]) {
-                  modalStateErrors.push(error.error.errors[key]);
+                  modelStateErrors.push(error.error.errors[key]);
                 }
               }
 
-              throw modalStateErrors.flat();
+              throw modelStateErrors.flat();
             } else {
-              toast.error(error.error + ' ' + error.status);
+              toast.error(error.error);
             }
             break;
           case 401:
