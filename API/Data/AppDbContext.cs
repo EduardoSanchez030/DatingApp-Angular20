@@ -13,6 +13,8 @@ namespace DatingApp.API.Data
         public DbSet<Photo> Photos { get; set; }
         public DbSet<MemberLike> Likes { get; set; }
         public DbSet<Message> Messages { get; set; }
+        public DbSet<Group> Groups { get; set; }
+        public DbSet<Connection> Connections { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -20,8 +22,8 @@ namespace DatingApp.API.Data
 
             modelBuilder.Entity<IdentityRole>()
             .HasData(
-                new IdentityRole { Id = "member-id",ConcurrencyStamp = null, Name = "Member", NormalizedName = "MEMBER" },
-                new IdentityRole { Id = "moderator-id",ConcurrencyStamp = null, Name = "Moderator", NormalizedName = "MODERATOR" },
+                new IdentityRole { Id = "member-id", ConcurrencyStamp = null, Name = "Member", NormalizedName = "MEMBER" },
+                new IdentityRole { Id = "moderator-id", ConcurrencyStamp = null, Name = "Moderator", NormalizedName = "MODERATOR" },
                 new IdentityRole { Id = "admin-id", ConcurrencyStamp = null, Name = "Admin", NormalizedName = "ADMIN" }
             );
 
