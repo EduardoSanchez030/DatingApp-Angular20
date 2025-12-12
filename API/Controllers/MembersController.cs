@@ -41,10 +41,11 @@ public class MembersController(
     }
 
     [Authorize]
-    [HttpGet("{memberId}/Photos")]
-    public async Task<ActionResult<IReadOnlyList<Photo>>> GetMemberPhotos(string memberId)
+    [HttpGet("{id}/Photos")]
+    public async Task<ActionResult<IReadOnlyList<Photo>>> GetMemberPhotos(string id)
     {
-        return Ok(await uow.MemberRepository.GetPhotosForMemberAsync(memberId));
+        var isCurrentUser = User.GetMemberId() == id;
+        return Ok(await uow.MemberRepository.GetPhotosForMemberAsync(id, isCurrentUser));
     }
 
     [Authorize]
@@ -105,12 +106,6 @@ public class MembersController(
             MemberId = memberId
         };
        
-        if (member.ImageUrl == null)
-        {
-            member.ImageUrl = photo.Url;
-            member.User.ImageUrl = photo.Url;
-        }
-
         member.Photos.Add(photo);
 
         //memberRepository.Update(member);
