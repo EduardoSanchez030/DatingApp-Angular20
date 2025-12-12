@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace API.Controllers;
 
 public class MembersController(
-    IMemberRepository memberRepository,
+    IUnitOfWork uow,
     IPhotoService photoService) : BaseApiController
 {
     [HttpGet]
@@ -23,14 +23,14 @@ public class MembersController(
 
         memberParams.CurrentMemberid = memberId;
 
-        return Ok(await memberRepository.GetMembersAync(memberParams));
+        return Ok(await uow.MemberRepository.GetMembersAync(memberParams));
     }
 
     [Authorize]
     [HttpGet("{id}")]
     public async Task<ActionResult<Member>> GetMember(string id)
     {
-        var member = await memberRepository.GetMemberByIdAsync(id);
+        var member = await uow.MemberRepository.GetMemberByIdAsync(id);
 
         if (member == null)
         {
@@ -44,7 +44,7 @@ public class MembersController(
     [HttpGet("{memberId}/Photos")]
     public async Task<ActionResult<IReadOnlyList<Photo>>> GetMemberPhotos(string memberId)
     {
-        return Ok(await memberRepository.GetPhotosForMemberAsync(memberId));
+        return Ok(await uow.MemberRepository.GetPhotosForMemberAsync(memberId));
     }
 
     [Authorize]
@@ -57,7 +57,7 @@ public class MembersController(
             return BadRequest("No Id found in token");
         }
 
-        var member = await memberRepository.GetMemberForUpdateAsync(memberId);
+        var member = await uow.MemberRepository.GetMemberForUpdateAsync(memberId);
 
         if (member == null)
         {
@@ -72,7 +72,7 @@ public class MembersController(
         member.User.DisplayName =  memberUpdateDto.DisplayName ?? member.User.DisplayName;
 
         //memberRepository.Update(member);
-        if(await memberRepository.SaveAllAsync()) return NoContent();
+        if(await uow.Complete()) return NoContent();
 
         return BadRequest("Failed to update member");
     }
@@ -87,7 +87,7 @@ public class MembersController(
             return BadRequest("No Id found in token");
         }
 
-        var member = await memberRepository.GetMemberForUpdateAsync(memberId);
+        var member = await uow.MemberRepository.GetMemberForUpdateAsync(memberId);
 
         if (member == null)
         {
@@ -114,7 +114,7 @@ public class MembersController(
         member.Photos.Add(photo);
 
         //memberRepository.Update(member);
-        if(await memberRepository.SaveAllAsync()) return photo;
+        if(await uow.Complete()) return photo;
 
         return BadRequest("Problem adding photo");
     }
@@ -129,7 +129,7 @@ public class MembersController(
             return BadRequest("No Id found in token");
         }
 
-        var member = await memberRepository.GetMemberForUpdateAsync(memberId);
+        var member = await uow.MemberRepository.GetMemberForUpdateAsync(memberId);
 
         if (member == null)
         {
@@ -146,7 +146,7 @@ public class MembersController(
         member.ImageUrl = photo.Url;
         member.User.ImageUrl = photo.Url;
 
-        if(await memberRepository.SaveAllAsync()) return NoContent();
+        if(await uow.Complete()) return NoContent();
 
         return BadRequest("Problem setting main photo");
     }
@@ -161,7 +161,7 @@ public class MembersController(
             return BadRequest("No Id found in token");
         }
 
-        var member = await memberRepository.GetMemberForUpdateAsync(memberId);
+        var member = await uow.MemberRepository.GetMemberForUpdateAsync(memberId);
 
         if (member == null)
         {
@@ -186,7 +186,7 @@ public class MembersController(
             member.Photos.Remove(photo);        
         }
 
-        if (await memberRepository.SaveAllAsync()) return Ok();
+        if (await uow.Complete()) return Ok();
 
         return BadRequest("Problem removing photo");
     }

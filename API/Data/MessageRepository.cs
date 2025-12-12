@@ -60,11 +60,6 @@ public class MessageRepository(AppDbContext context) : IMessageRepository
                 .Select(MessageExtensions.ToDtoProjection())
                 .ToListAsync();
     }
-
-    public async Task<bool> SaveAllChanges()
-    {
-        return await context.SaveChangesAsync() > 0;
-    }
     
     #region Group/Connection
     public void AddGroup(Group group)

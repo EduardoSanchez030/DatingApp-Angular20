@@ -1,5 +1,4 @@
 using System.Collections.Concurrent;
-using System.Net.Http.Headers;
 
 namespace API.SignalR;
 

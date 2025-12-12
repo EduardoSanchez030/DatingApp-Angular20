@@ -3,6 +3,7 @@ using API.Entities;
 using API.Extensions;
 using API.Interfaces;
 using DatingApp.API.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -21,10 +22,10 @@ public class AccountController(
         {
             Email = registerDto.Email,
             DisplayName = registerDto.DisplayName,
-            UserName =  registerDto.Email,
+            UserName = registerDto.Email,
             Member = new Member()
             {
-                DisplayName = registerDto. DisplayName,
+                DisplayName = registerDto.DisplayName,
                 Gender = registerDto.Gender,
                 City = registerDto.City,
                 Country = registerDto.Country,
@@ -57,7 +58,7 @@ public class AccountController(
         var user = await userManager.FindByEmailAsync(loginDto.Email);
 
         if (user == null) return Unauthorized("Invalid email");
-        
+
         var result = await userManager.CheckPasswordAsync(user, loginDto.Password);
 
         if (!result) return Unauthorized("Invalid password");
@@ -83,6 +84,22 @@ public class AccountController(
 
         return await user.ToDto(tokenService);
     }
+
+    [Authorize]
+    [HttpPost("logout")]
+    public async Task<ActionResult> Logout()
+    {
+        await userManager.Users
+          .Where(x => x.Id == User.GetMemberId())
+          .ExecuteUpdateAsync(setters => setters
+                      .SetProperty(x => x.RefreshToken, _ => null)
+                      .SetProperty(x => x.RefreshTokenExpiry, _ => null));
+
+        Response.Cookies.Delete("refreshToken");
+        
+        return Ok();
+    }
+
 
     private async Task SetRefreshTokenCookie(AppUser user)
     {
