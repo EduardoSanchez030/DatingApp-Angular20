@@ -13,7 +13,7 @@ public class MembersController(
     IPhotoService photoService) : BaseApiController
 {
     [HttpGet]
-    public async Task<ActionResult<IReadOnlyList<Member>>> GetMembers([FromQuery]MemberParams memberParams)
+    public async Task<ActionResult<IReadOnlyList<Member>>> GetMembers([FromQuery] MemberParams memberParams)
     {
         var memberId = User.GetMemberId();
         if (memberId == null)
@@ -64,16 +64,16 @@ public class MembersController(
         {
             return BadRequest("Could not get member");
         }
-        
+
         member.DisplayName = memberUpdateDto.DisplayName ?? member.DisplayName;
-        member.Description = memberUpdateDto.Description ??  member.Description;
+        member.Description = memberUpdateDto.Description ?? member.Description;
         member.City = memberUpdateDto.City ?? member.City;
         member.Country = memberUpdateDto.Country ?? member.Country;
 
-        member.User.DisplayName =  memberUpdateDto.DisplayName ?? member.User.DisplayName;
+        member.User.DisplayName = memberUpdateDto.DisplayName ?? member.User.DisplayName;
 
         //memberRepository.Update(member);
-        if(await uow.Complete()) return NoContent();
+        if (await uow.Complete()) return NoContent();
 
         return BadRequest("Failed to update member");
     }
@@ -98,18 +98,24 @@ public class MembersController(
         var result = await photoService.UploadPhotoAsync(file);
 
         if (result.Error != null) return BadRequest(result.Error.Message);
-        
+
         var photo = new Photo()
         {
             PublicId = result.PublicId,
             Url = result.SecureUrl.AbsoluteUri,
             MemberId = memberId
         };
-       
+
+        if (member.ImageUrl == null)
+        {
+            member.ImageUrl = photo.Url;
+            member.User.ImageUrl = photo.Url;
+        }
+
         member.Photos.Add(photo);
 
         //memberRepository.Update(member);
-        if(await uow.Complete()) return photo;
+        if (await uow.Complete()) return photo;
 
         return BadRequest("Problem adding photo");
     }
@@ -135,13 +141,13 @@ public class MembersController(
 
         if (member.ImageUrl == photo?.Url || photo == null)
         {
-             return BadRequest("Cannot set as main image");
+            return BadRequest("Cannot set as main image");
         }
-       
+
         member.ImageUrl = photo.Url;
         member.User.ImageUrl = photo.Url;
 
-        if(await uow.Complete()) return NoContent();
+        if (await uow.Complete()) return NoContent();
 
         return BadRequest("Problem setting main photo");
     }
@@ -167,9 +173,9 @@ public class MembersController(
 
         if (member.ImageUrl == photo?.Url || photo == null)
         {
-             return BadRequest("Cannot delete main photo");
+            return BadRequest("Cannot delete main photo");
         }
-        
+
         if (photo.PublicId != null)
         {
             var result = await photoService.DeletePhotoAsync(photo.PublicId);
@@ -178,7 +184,7 @@ public class MembersController(
                 return BadRequest(result.Error.Message);
             }
 
-            member.Photos.Remove(photo);        
+            member.Photos.Remove(photo);
         }
 
         if (await uow.Complete()) return Ok();
