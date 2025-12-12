@@ -1,2 +1,2 @@
 # DatingApp-Angular20
-Angular + .net9 training
+Angular + .net10 training

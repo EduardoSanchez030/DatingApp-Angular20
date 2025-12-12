@@ -33,16 +33,16 @@ namespace DatingApp.API.Data
                 .HasKey(x => new { x.SourceMemberId, x.TargetMemberId });
 
             modelBuilder.Entity<MemberLike>()
-                .HasOne(s => s.SourceMember)
-                .WithMany(t => t.LikedMembers)
-                .HasForeignKey(s => s.SourceMemberId)
-                .OnDelete(DeleteBehavior.Cascade);
+            .HasOne(s => s.SourceMember)
+            .WithMany(t => t.LikedMembers)
+            .HasForeignKey(s => s.SourceMemberId)
+            .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<MemberLike>()
                 .HasOne(s => s.TargetMember)
                 .WithMany(t => t.LikedByMembers)
                 .HasForeignKey(s => s.TargetMemberId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Message>()
                 .HasOne(s => s.Sender)
