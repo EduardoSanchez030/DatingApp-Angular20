@@ -50,7 +50,6 @@ export class MemberList implements OnInit {
   }
 
   onCLose() {
-    console.log('Modal closed');
   }
 
   onFilterChange(data: MemberParams) {

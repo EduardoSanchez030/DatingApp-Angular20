@@ -103,7 +103,8 @@ public class MembersController(
         {
             PublicId = result.PublicId,
             Url = result.SecureUrl.AbsoluteUri,
-            MemberId = memberId
+            MemberId = memberId,
+            IsApproved = true
         };
 
         if (member.ImageUrl == null)

@@ -30,8 +30,6 @@ export class MessageService {
     this.hubConnection.start().catch(error => console.log(error));
 
      this.hubConnection.on('ReceiveMessageThread', (messages: Message[]) => {
-      console.log('hi basterd');
-       console.log(messages);
       this.messageThread.set(messages.map(message => ({
           ...message,
           currentUserSender: message.senderId !== otherUserId
